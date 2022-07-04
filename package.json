@@ -2,6 +2,7 @@
   "dependencies": {
     "discord.js": "^13.8.1",
     "dotenv": "^16.0.1",
+    "instagram-private-api": "^1.45.3",
     "instagram-web-api": "^2.2.2"
   },
   "name": "gmbot",

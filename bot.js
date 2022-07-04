@@ -2,20 +2,18 @@ require('dotenv').config();
 
 
 //Instagram initialization
-const Instagram = require('instagram-web-api')
-const { username, password } = process.env
- 
-const clientinstagram = new Instagram({ username, password })
- 
-;(async () => {
-  await clientinstagram.login()
-  const profileInstagram = await clientinstagram.getProfile()
- 
-  console.log(profileInstagram)
+const { IgApiClient } = require('instagram-private-api');
+const { sample } = require('lodash');
+
+const ig = new IgApiClient();
+
+ig.state.generateDevice(process.env.IG_USERNAME);
+
+/**/
+(async () => {
+	await ig.simulate.preLoginFlow();
 })()
-
-
-
+/**/
 
 //Discord initalization
 const Discord = require("discord.js");
@@ -23,9 +21,16 @@ const clientDiscord = new Discord.Client({intents: ["GUILDS", "GUILD_MESSAGES"]}
 
 clientDiscord.on("ready", () => {
 	console.log(`Logged in as ${clientDiscord.user.tag}!`) })
-	clientDiscord.on("message", msg => {
+	clientDiscord.on("message", async msg => {
 		if (msg.content === "ping") {
-			await client.getPhotosByUsername({ username: 'unicorn' , 'first': 1})
+			
+			const loggedInUser = await ig.account.login(process.env.IG_USERNAME, process.env.IG_PASSWORD);
+			
+		  const userFeed = ig.feed.user(loggedInUser.pk);
+		  const myPostsFirstPage = await userFeed.items();
+			console.log(myPostsFirstPage[0]);
+			msg.reply(`https://www.instagram.com/p/${myPostsFirstPage[0].code}`);
+			
 	}
 })
 
