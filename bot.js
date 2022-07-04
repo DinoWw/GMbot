@@ -1,19 +1,34 @@
 require('dotenv').config();
 
+
+//Instagram initialization
+const Instagram = require('instagram-web-api')
+const { username, password } = process.env
+ 
+const clientinstagram = new Instagram({ username, password })
+ 
+;(async () => {
+  await clientinstagram.login()
+  const profileInstagram = await clientinstagram.getProfile()
+ 
+  console.log(profileInstagram)
+})()
+
+
+
+
+//Discord initalization
 const Discord = require("discord.js");
-const client = new Discord.Client({intents: ["GUILDS", "GUILD_MESSAGES"]});
+const clientDiscord = new Discord.Client({intents: ["GUILDS", "GUILD_MESSAGES"]});
 
-
-
-
-client.on("ready", () => {
-	console.log(`Logged in as ${client.user.tag}!`) })
-	client.on("message", msg => {
+clientDiscord.on("ready", () => {
+	console.log(`Logged in as ${clientDiscord.user.tag}!`) })
+	clientDiscord.on("message", msg => {
 		if (msg.content === "ping") {
-			msg.reply("pong");
+			await client.getPhotosByUsername({ username: 'unicorn' , 'first': 1})
 	}
 })
 
+clientDiscord.login(process.env.DISCORD_TOKEN);
 
 
-client.login(process.env.DISCORD_TOKEN);
